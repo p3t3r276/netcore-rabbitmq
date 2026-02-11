@@ -1,59 +1,73 @@
-# netcore-rabbitmq
+# Netcore Rabbitmq example
+
+# E-Commerce Order Processing System with RabbitMQ
 
 ## Overview
+This .NET 9 application demonstrates a practical RabbitMQ implementation for processing e-commerce orders asynchronously.
 
-This project demonstrates how to integrate RabbitMQ with .NET Core for message queuing. It includes a producer application that sends messages and a consumer application that receives and processes them.
+## Architecture
 
-## Prerequisites
+### Components:
+1. **OrderProcessing.Shared** - Shared models and contracts
+2. **OrderProcessing.Producer** - ASP.NET Core Web API (Order submission)
+3. **OrderProcessing.Consumer** - Background Worker Service (Order processing)
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- [RabbitMQ Server](https://www.rabbitmq.com/download.html)
+### Data Flow:
+```
+Customer → Web API (Producer) → RabbitMQ Queue → Worker Service (Consumer) → Processing
+```
 
-## Installation
+## Scenario
+1. Customer places an order via REST API
+2. API validates and publishes order to RabbitMQ queue
+3. Background worker picks up the order
+4. Worker processes the order (inventory check, payment, shipping)
+5. Order status is updated
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd netcore-rabbitmq
-   ```
+## Queue Configuration
+- **Queue Name**: `orders_queue`
+- **Exchange**: `orders_exchange` (direct)
+- **Routing Key**: `order.new`
 
-2. Restore dependencies:
-   ```bash
-   dotnet restore
-   ```
+## Running the Application
 
-## Configuration
+### Prerequisites
+- .NET 9 SDK
+- Docker (for RabbitMQ)
 
-Update the `appsettings.json` files in both the producer and consumer projects with your RabbitMQ connection details if needed.
-
-## Usage
-
-### Start the Consumer
-
-Open a terminal and run the consumer application:
-
+### Start RabbitMQ
 ```bash
-cd src/Consumer
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+```
+
+### Run Producer (API)
+```bash
+cd OrderProcessing.Producer
+dotnet run
+```
+API will be available at: http://localhost:5000
+
+### Run Consumer (Worker)
+```bash
+cd OrderProcessing.Consumer
 dotnet run
 ```
 
-### Start the Producer
-
-Open another terminal and run the producer application:
-
+### Test the System
 ```bash
-cd src/Producer
-dotnet run
+curl -X POST http://localhost:5000/api/orders \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customerId": "CUST001",
+    "customerEmail": "john@example.com",
+    "items": [
+      {"productId": "PROD001", "productName": "Laptop", "quantity": 1, "price": 999.99},
+      {"productId": "PROD002", "productName": "Mouse", "quantity": 2, "price": 29.99}
+    ]
+  }'
 ```
 
-Messages will be sent from the producer to the consumer via RabbitMQ.
-
-## Project Structure
-
-- `src/Producer`: The .NET Core application that sends messages to RabbitMQ.
-- `src/Consumer`: The .NET Core application that receives messages from RabbitMQ.
-- `src/Shared`: Shared code or models used by both applications.
-
-## License
-
-This project is licensed under the terms of the MIT license.
+## RabbitMQ Management
+Access the management UI at: http://localhost:15672
+- Username: `guest`
+- Password: `guest`
