@@ -1,6 +1,6 @@
-using TestRabbit.API.Models;
+using TestRabbit.Shared.Models;
 
-namespace TestRabbit.API.Services;
+namespace TestRabbit.Consumer.Services;
 
 public class OrderProcessor(ILogger<OrderProcessor> logger)
 {

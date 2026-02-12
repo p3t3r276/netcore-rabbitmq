@@ -37,7 +37,7 @@ Customer → Web API (Producer) → RabbitMQ Queue → Worker Service (Consumer)
 
 ### Start RabbitMQ
 ```bash
-docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4-management
 ```
 
 ### Run Producer (API)
@@ -55,7 +55,7 @@ dotnet run
 
 ### Test the System
 ```bash
-curl -X POST http://localhost:5000/api/orders \
+curl -X POST http://localhost:5176/api/orders \
   -H "Content-Type: application/json" \
   -d '{
     "customerId": "CUST001",

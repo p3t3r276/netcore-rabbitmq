@@ -1,14 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
-using TestRabbit.API.Models;
-using TestRabbit.API.Services;
+using TestRabbit.Shared.Models;
+using TestRabbit.Producers.Services;
 
-namespace TestRabbit.API.Controllers;
+namespace TestRabbit.Producers.Controllers;
 
+[Route("api/[controller]")]
 public class OrdersController(RabbitMqProducer producer, ILogger<OrdersController> logger) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request)
     {
+        logger.LogInformation(
+            "Received order creation request for customer {CustomerId}",
+            request.CustomerId
+        );
         try
         {
             // Validate request

@@ -3,9 +3,9 @@ using System.Text;
 using System.Text.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using TestRabbit.API.Models;
+using TestRabbit.Shared.Models;
 
-namespace TestRabbit.API.Services;
+namespace TestRabbit.Consumer.Services;
 
 public class RabbitMqConsumer : IAsyncDisposable
 {

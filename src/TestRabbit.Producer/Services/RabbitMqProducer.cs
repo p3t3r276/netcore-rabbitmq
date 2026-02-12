@@ -1,9 +1,9 @@
 using System.Text;
 using System.Text.Json;
 using RabbitMQ.Client;
-using TestRabbit.API.Models;
+using TestRabbit.Shared.Models;
 
-namespace TestRabbit.API.Services;
+namespace TestRabbit.Producers.Services;
 
 public class RabbitMqProducer(IConnection connection, IChannel channel, ILogger<RabbitMqProducer> logger) : IAsyncDisposable
 {
@@ -25,6 +25,8 @@ public class RabbitMqProducer(IConnection connection, IChannel channel, ILogger<
             UserName = configuration["RabbitMQ:UserName"] ?? "guest",
             Password = configuration["RabbitMQ:Password"] ?? "guest"
         };
+
+        logger.LogInformation("Connecting to RabbitMQ at {Host}:{Port}", factory.HostName, factory.Port);
 
         var connection = await factory.CreateConnectionAsync();
         var channel = await connection.CreateChannelAsync();

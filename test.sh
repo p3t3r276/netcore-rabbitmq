@@ -9,7 +9,7 @@ echo ""
 
 # Test 1: Single order
 echo "Test 1: Submitting a single order..."
-curl -X POST http://localhost:5000/api/orders \
+curl -X POST http://localhost:5176/api/orders \
     -H "Content-Type: application/json" \
     -d '{
         "customerId": "CUST001",
@@ -21,11 +21,11 @@ curl -X POST http://localhost:5000/api/orders \
     }'
 echo -e "\n"
 
-sleep 3
+sleep 1
 
 # Test 2: Multiple items order
 echo "Test 2: Submitting an order with multiple items..."
-curl -X POST http://localhost:5000/api/orders \
+curl -X POST http://localhost:5176/api/orders \
     -H "Content-Type: application/json" \
     -d '{
         "customerId": "CUST002",
@@ -42,7 +42,7 @@ sleep 3
 
 # Test 3: High-value order
 echo "Test 3: Submitting a high-value order..."
-curl -X POST http://localhost:5000/api/orders \
+curl -X POST http://localhost:5176/api/orders \
     -H "Content-Type: application/json" \
     -d '{
         "customerId": "CUST003",
